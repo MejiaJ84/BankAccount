@@ -32,13 +32,15 @@ namespace BankAccount
         public double Balance { get; private set; }
 
         /// <summary>
-        /// Add a specified amount of money to the account
+        /// Add a specified amount of money to the account balance
         /// </summary>
         /// <param name="amt">Positive amount to add</param>
         /// <exception cref="NotImplementedException"></exception>
-        public void Deposit(double amt)
+        /// <returns>The new balance after deposit</returns>
+        public double Deposit(double amt)
         {
-            throw new NotImplementedException();
+            Balance += amt;
+            return Balance;
         }
 
         /// <summary>
