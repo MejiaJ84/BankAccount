@@ -39,6 +39,12 @@ namespace BankAccount
         /// <returns>The new balance after deposit</returns>
         public double Deposit(double amt)
         {
+            if (amt <= 0)
+            {
+                // using nameof allows the variable name to be dynamic  
+                throw new ArgumentOutOfRangeException($"{nameof(amt)} must be greater than 0");
+            }
+
             Balance += amt;
             return Balance;
         }
@@ -46,10 +52,11 @@ namespace BankAccount
         /// <summary>
         /// Withdraws specified amount from the balance
         /// </summary>
-        /// <exception cref="NotImplementedException">Positive amount to be withdrawn</exception>
-        public void Withdraw()
+        /// <param name="ammount"
+        /// <returns>Returns updated balance after withdrawal</returns>
+        public double Withdraw(double ammount)
         {
-            throw new NotImplementedException();
+            return Balance -= ammount;
         }
     }
 }

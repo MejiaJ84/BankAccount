@@ -11,14 +11,25 @@ namespace BankAccount.Tests
     [TestClass()]
     public class AccountTests
     {
-        [TestMethod()]
-        public void Deposit_PositiveAmount_AddToBalance()
+        private Account acc;
+
+        [TestInitialize]
+        public void CreateDefaultAccount() // needs to be public to run
         {
-            Account acc = new("C Corax");
+            acc = new Account("C. Corax");
+        }
 
-            acc.Deposit(100);
+        [TestMethod()]
+        [DataRow(100)]
+        [DataRow(.01)]
+        [DataRow(1.99)]
+        public void Deposit_PositiveAmount_AddToBalance(double depostiAmt)
+        {
+            
 
-            Assert.AreEqual(100, acc.Balance);
+            acc.Deposit(depostiAmt);
+
+            Assert.AreEqual(depostiAmt, acc.Balance);
         }
 
         [TestMethod]
@@ -26,15 +37,53 @@ namespace BankAccount.Tests
         {
             /// AAA - Arrange Act Assert
             /// Arrange
-            Account acc = new("L Johnson");
+            
             double depositAmt = 100;
             double expectedReturn = 100;
 
             /// Act
-            double reutrnValue = acc.Deposit(depositAmt);
+            double reutrnValue = acc.Deposit(depositAmt); // sends depositAmt to Deposit method in BankAccount class
 
             ///Assert
             Assert.AreEqual(expectedReturn, reutrnValue);
         }
+
+        [TestMethod]
+        [DataRow(-1)]
+        [DataRow(0)]
+        public void Deposit_ZeroOrLess_ThrowsArgumentException(double invalidDepositAmt)
+        {
+            // Arrange
+            // Uses CreateDefaultAccount
+            
+            // Assert => Act
+            // () => : Wrapping test code in an anonymous function
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => acc.Deposit(invalidDepositAmt));
+        }
+
+        
+        /// Withdraw positive amount - returns updated balance
+        /// withdraw 0 - throws Throws ArgumentOutOfRange exception
+        /// withdraw negative amount - Throws ArgumentOutOfRange exception
+        /// overdraw - ArgumentException
+        
+        [TestMethod]
+        public void Withdraw_PositiveAmount_DecreasesBalance()
+        {
+            // Arrange
+            double initialDeposit = 100;
+            double withdrawalAmount = 50;
+            double expectedBalance = initialDeposit - withdrawalAmount;
+
+            // Act
+            acc.Deposit(initialDeposit);
+            acc.Withdraw(withdrawalAmount);
+
+            double actualBalance = acc.Balance; // get balance after withdrawal
+
+            //Assert
+            Assert.AreEqual(expectedBalance, actualBalance);
+        }
+
     }
 }
