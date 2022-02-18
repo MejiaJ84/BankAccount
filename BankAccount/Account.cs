@@ -11,6 +11,8 @@ namespace BankAccount
     /// </summary>
     public class Account
     {
+        private string owner;
+
         /// <summary>
         /// Creates an account with a specific owner
         /// and a balance of 0
@@ -24,7 +26,55 @@ namespace BankAccount
         /// <summary>
         /// Account owners full name
         /// </summary>
-        public string Owner { get; set; }
+        public string Owner 
+        {
+            get { return owner; }
+            set 
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(($"{nameof(Owner)} cannot be null"));
+                }
+
+                if (value.Trim() == string.Empty)
+                {
+                    throw new ArgumentException(($"{nameof(Owner)} must contain text"));
+                }
+
+                if (IsOwnerNameValid(value))
+                {
+                    owner = value;
+                }
+                else
+                {
+                    throw new ArgumentException($"{nameof(Owner)} can be up to 20 characters A-Z, and contain spaces.");
+                }
+            }
+        
+        }
+
+
+        private bool IsOwnerNameValid(string ownerName)
+        {
+            char[] validChars = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+                             'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+                             'u', 'v', 'w', 'x', 'y', 'z'};
+            ownerName = ownerName.ToLower();
+            const int MaxNameLength = 20;
+            if (ownerName.Length > MaxNameLength)
+            {
+                return false;
+            }
+            foreach (char letter in ownerName)
+            {
+                if (letter != ' ' && !validChars.Contains(letter))
+                {
+                    return false;
+                }
+            }
+            return true;
+
+        }
 
         /// <summary>
         /// Amount of money in the account
@@ -56,15 +106,17 @@ namespace BankAccount
         /// <returns>Returns updated balance after withdrawal</returns>
         public double Withdraw(double amount)
         {
-            if (amount <= 0) 
-            { 
+            if (amount <= 0)
+            {
                 throw new ArgumentOutOfRangeException($"{nameof(amount)} must be greater than 0");
             }
-            if (amount > Balance) 
+            if (amount > Balance)
             {
                 throw new ArgumentException($"{nameof(amount)} cannot be more than the available balance.");
             }
             return Balance -= amount;
         }
+
+
     }
 }
