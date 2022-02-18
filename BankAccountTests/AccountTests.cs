@@ -16,7 +16,7 @@ namespace BankAccount.Tests
         [TestInitialize]
         public void CreateDefaultAccount() // needs to be public to run
         {
-            acc = new Account("C. Corax");
+            acc = new Account("Corvus Corax");
         }
 
         [TestMethod()]
@@ -113,13 +113,38 @@ namespace BankAccount.Tests
         [DataRow(1)]
         public void Withdraw_OverDraw_ThrowsArgumentException(double withdrawAmount)
         {
-            //Arrange
-            
-
-            //Act
-
-            //Assert
             Assert.ThrowsException<ArgumentException>(() => acc.Withdraw(withdrawAmount));
+        }
+
+        [TestMethod]
+        public void Owner_Null_ThrowsArgumentNullException()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => acc.Owner = null);
+        }
+
+        [TestMethod]
+        public void Owner_WhiteSpaceOrEmptyString_ThrowsArgumentException()
+        {
+            Assert.ThrowsException<ArgumentException>(() => acc.Owner = String.Empty);
+        }
+
+        [TestMethod]
+        [DataRow("Corvus")]
+        [DataRow("Corcus Corax")]
+        [DataRow("Corvus Corax hates h")]
+        public void Owner_SetUpTo20Chars_Successfully(string ownerName)
+        {
+            acc.Owner = ownerName;
+            Assert.AreEqual(ownerName, acc.Owner);
+        }
+
+        [TestMethod]
+        [DataRow("Corvus 3rd")]
+        [DataRow("Corvus Corax hates horus the traitor")]
+        [DataRow("$%^")]
+        public void Owner_InvalidName_ThrowsArgumentException(string ownerName)
+        {
+            Assert.ThrowsException<ArgumentException>(() => acc.Owner = ownerName);
         }
 
     }
